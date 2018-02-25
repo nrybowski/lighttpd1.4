@@ -1566,6 +1566,10 @@ static int server_main (server * const srv, int argc, char **argv) {
 	}
 
 
+	log_error_write(srv, __FILE__, __LINE__, "s", "HEY : 1");
+
+
+
 #ifdef HAVE_FORK
 	/**
 	 * notify daemonize-grandparent of successful startup
@@ -1778,6 +1782,11 @@ static int server_main (server * const srv, int argc, char **argv) {
 	if (oneshot_fd && server_oneshot_init(srv, oneshot_fd)) {
 		oneshot_fd = -1;
 	}
+
+
+
+		log_error_write(srv, __FILE__, __LINE__, "s", "HEY : 2");
+
 
 	/* main-loop */
 		int n;
