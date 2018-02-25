@@ -1835,7 +1835,7 @@ static int server_main (server * const srv, int argc, char **argv) {
 				for (i = 0; i < conns->size; i++) {
 					connection *con = conns->ptr[i];
 
-					int optlen = MAX_SUBFLOWS*sizeof(struct mptcp_sub_status);
+					socklen_t optlen = MAX_SUBFLOWS*sizeof(struct mptcp_sub_status);
   					ids = (struct mptcp_sub_ids *) malloc(optlen);
   					if(ids==NULL) {
 						log_error_write(srv, __FILE__, __LINE__, "s",
