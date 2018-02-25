@@ -1,3 +1,33 @@
+#define MPTCP
+
+#ifdef MPTCP
+#include <linux/tcp.h>
+
+int get_tcp_info(int sockfd, int subflow, struct tcp_info *ti) {
+  if( (sockfd<0) || (ti==NULL))
+    return -1;
+
+  struct mptcp_sub_getsockopt sub_gso;
+
+  int optlen = sizeof(struct mptcp_sub_getsockopt);
+  int sub_optlen = sizeof(struct tcp_info);
+  sub_gso.id = subflow;
+  sub_gso.level = IPPROTO_TCP;
+  sub_gso.optname = TCP_INFO;
+  sub_gso.optlen = &sub_optlen;
+  sub_gso.optval = (char *) ti;
+
+  int error =  getsockopt(sockfd, IPPROTO_TCP, MPTCP_SUB_GETSOCKOPT,
+			  &sub_gso, &optlen);
+  if (error) {
+    DEBUG2("Ooops something went wrong with get info !%s","\n");
+    return -1;
+  }
+  return 0;
+}
+
+#endif
+
 #include "first.h"
 
 #include "server.h"
@@ -1688,8 +1718,8 @@ static int server_main (server * const srv, int argc, char **argv) {
 	}
 
 	/* main-loop */
-	while (!srv_shutdown) {
 		int n;
+		while (!srv_shutdown) {
 		size_t ndx;
 		time_t min_ts;
 
@@ -1744,6 +1774,50 @@ static int server_main (server * const srv, int argc, char **argv) {
 				int cs = 0;
 #endif
 				connections *conns = srv->conns;
+
+/***********************
+ ***** DEBUT TESTS *****
+ ***********************/
+//+ include au debut
+ #ifdef MPTCP
+				for (i = 0; i < conns->size; i++) {
+					connection *con = conns->ptr[i];
+
+					int optlen = MAX_SUBFLOWS*sizeof(struct mptcp_sub_status);
+  					ids = (struct mptcp_sub_ids *) malloc(optlen);
+  					if(ids==NULL) {
+						log_error_write(srv, __FILE__, __LINE__, "s",
+							"malloc failed");
+    					return -1;
+  					}
+
+  					err=getsockopt(sockfd, IPPROTO_TCP, MPTCP_GET_SUB_IDS, ids, &optlen);
+  					if(err<0) {
+						log_error_write(srv, __FILE__, __LINE__, "s",
+							"getsockopt failed");
+    					return -1;
+  					}
+  					for(i = 0; i < ids->sub_count; i++)
+					{
+    					struct tcp_info ti;
+    					printf("\n\nTCP_INFO for %d \n",ids->sub_status[i].id);
+    					err=get_tcp_info(sockfd, ids->sub_status[i].id, &ti);
+
+    					if(err<0) {
+							log_error_write(srv, __FILE__, __LINE__, "s",
+								"get_tct_info failed");
+      						return -1;
+    					}
+    					print_tcp_info(&ti);
+  					}
+				}
+
+#endif
+/***********************
+ *****  FIN TESTS  *****
+ ***********************/
+
+
 				handler_t r;
 
 				switch(r = plugins_call_handle_trigger(srv)) {
@@ -1967,16 +2041,7 @@ static int server_main (server * const srv, int argc, char **argv) {
 			}
 		}
 
-		printf("%s\n", "Before if");
-
-		log_error_write(srv, __FILE__, __LINE__, "ss",
-                    "IF : ",
-				/*strerror(errno)*/"1");
-
 		if ((n = fdevent_poll(srv->ev, 1000)) > 0) {
-
-			printf("%s\n", "In if");
-
 			/* n is the number of events */
 			int fd;
 			int revents;
@@ -1984,9 +2049,6 @@ static int server_main (server * const srv, int argc, char **argv) {
 			last_active_ts = srv->cur_ts;
 			fd_ndx = -1;
 			do {
-
-				printf("%s\n", "In loop");
-
 				fdevent_handler handler;
 				void *context;
 
