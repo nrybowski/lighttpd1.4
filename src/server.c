@@ -90,6 +90,24 @@
 
 
 #ifdef MPTCP
+
+#define DEBUG2(s1,s2) (debug_print[debug])(s1,s2,__LINE__)
+#define DEBUG(s1) (debug_print[debug])(s1,NULL,__LINE__)
+
+
+void empty (char *str,char *str2, int line) {
+  return;
+}
+
+void oneline(char *str, char *str2, int line) {
+  if(str2!=NULL) {
+    fprintf(stderr,"debug [%d]: %s %s \n" ,line,str,str2);
+  } else {
+    fprintf(stderr,"debug [%d]: %s \n" ,line,str);
+  }
+}
+
+void (* debug_print[])(char *, char *, int) = { empty, oneline };
 /*
  *  retrieves the TCP_INFO structure for the corresponding subflow
  */
