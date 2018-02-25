@@ -2224,6 +2224,10 @@ static int server_main (server * const srv, int argc, char **argv) {
 }
 
 int main (int argc, char **argv) {
+
+	printf("PLS HELP ME\n");
+
+
     int rc;
 
   #ifdef HAVE_GETUID
