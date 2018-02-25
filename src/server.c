@@ -3,6 +3,32 @@
 #ifdef MPTCP
 #include <linux/tcp.h>
 
+/*
+ *  retrieves the TCP_INFO structure for the corresponding subflow
+ */
+int get_tcp_info(int sockfd, int subflow, struct tcp_info *ti) {
+  if( (sockfd<0) || (ti==NULL))
+    return -1;
+
+  struct mptcp_sub_getsockopt sub_gso;
+
+  int optlen = sizeof(struct mptcp_sub_getsockopt);
+  int sub_optlen = sizeof(struct tcp_info);
+  sub_gso.id = subflow;
+  sub_gso.level = IPPROTO_TCP;
+  sub_gso.optname = TCP_INFO;
+  sub_gso.optlen = &sub_optlen;
+  sub_gso.optval = (char *) ti;
+
+  int error =  getsockopt(sockfd, IPPROTO_TCP, MPTCP_SUB_GETSOCKOPT,
+			  &sub_gso, &optlen);
+  if (error) {
+    DEBUG2("Ooops something went wrong with get info !%s","\n");
+    return -1;
+  }
+  return 0;
+}
+
 void print_tcp_info(struct tcp_info *ti) {
   if(ti==NULL)
     return;
