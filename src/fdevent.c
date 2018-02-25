@@ -944,8 +944,12 @@ int fdevent_connect_status(int fd) {
     return (0 == getsockopt(fd,SOL_SOCKET,SO_ERROR,&opt,&len)) ? opt : errno;
 }
 
-
+#ifdef MPTCP
+#include <linux/tcp.h>
+#else
 #include <netinet/tcp.h>
+#endif
+
 #if (defined(__APPLE__) && defined(__MACH__)) \
   || defined(__FreeBSD__) || defined(__NetBSD__) \
   || defined(__OpenBSD__) || defined(__DragonFly__)
