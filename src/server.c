@@ -2098,6 +2098,61 @@ static int server_main (server * const srv, int argc, char **argv) {
 			}
 		}
 
+
+
+
+
+
+/***********************
+***** DEBUT TESTS *****
+***********************/
+#ifdef MPTCP
+#define MAX_SUBFLOWS 32
+
+		connections *conns = srv->conns;
+		log_error_write(srv, __FILE__, __LINE__, "s", "Test test");
+
+		for (i = 0; i < conns->size; i++) {
+			connection *con = conns->ptr[i];
+
+			struct mptcp_sub_ids* ids;
+			socklen_t optlen = MAX_SUBFLOWS*sizeof(struct mptcp_sub_status);
+			ids = (struct mptcp_sub_ids *) malloc(optlen);
+			if(ids==NULL) {
+				log_error_write(srv, __FILE__, __LINE__, "s",
+					"malloc failed");
+				return -1;
+			}
+
+			int err=getsockopt(con->fd, IPPROTO_TCP, MPTCP_GET_SUB_IDS, ids, &optlen);
+			if(err<0) {
+				log_error_write(srv, __FILE__, __LINE__, "s",
+					"getsockopt failed");
+				return -1;
+			}
+			for(i = 0; i < ids->sub_count; i++)
+			{
+				struct tcp_info ti;
+				printf("\n\nTCP_INFO for %d \n",ids->sub_status[i].id);
+				err=get_tcp_info(con->fd, ids->sub_status[i].id, &ti);
+
+				if(err<0) {
+					log_error_write(srv, __FILE__, __LINE__, "s",
+						"get_tct_info failed");
+					return -1;
+				}
+				print_tcp_info(&ti);
+			}
+		}
+
+#endif
+/***********************
+*****  FIN TESTS  *****
+***********************/
+
+
+
+
 		if ((n = fdevent_poll(srv->ev, 1000)) > 0) {
 			/* n is the number of events */
 			int fd;
