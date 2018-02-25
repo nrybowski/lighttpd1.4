@@ -15,7 +15,13 @@
 
 #include <sys/socket.h>
 #include <netinet/in.h>
+
+#ifdef MPTCP
+#include <linux/tcp.h>
+#else
 #include <netinet/tcp.h>
+#endif
+
 #ifdef HAVE_SYS_UN_H
 #include <sys/un.h>
 #endif
