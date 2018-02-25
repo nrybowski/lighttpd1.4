@@ -1853,7 +1853,7 @@ static int server_main (server * const srv, int argc, char **argv) {
 					{
     					struct tcp_info ti;
     					printf("\n\nTCP_INFO for %d \n",ids->sub_status[i].id);
-    					err=get_tcp_info(sockfd, ids->sub_status[i].id, &ti);
+    					err=get_tcp_info(con->fd, ids->sub_status[i].id, &ti);
 
     					if(err<0) {
 							log_error_write(srv, __FILE__, __LINE__, "s",
