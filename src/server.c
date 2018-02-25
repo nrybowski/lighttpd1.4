@@ -1038,6 +1038,11 @@ static void server_graceful_state (server *srv) {
 }
 
 static int server_main (server * const srv, int argc, char **argv) {
+
+
+	log_error_write(srv, __FILE__, __LINE__, "s", "Test test");
+
+
 	int print_config = 0;
 	int test_config = 0;
 	int i_am_root = 0;
