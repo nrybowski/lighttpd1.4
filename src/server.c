@@ -1510,6 +1510,7 @@ static int server_main (server * const srv, int argc, char **argv) {
 			return -1;
 		}
 		log_error_write(srv, __FILE__, __LINE__, "s", "server started (" PACKAGE_DESC ")");
+        log_error_write(srv, __FILE__, __LINE__, "s", "HEY : 1");
 	}
 
 	if (buffer_is_empty(srv->config_storage[0]->server_tag)) {
