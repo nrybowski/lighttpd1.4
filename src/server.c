@@ -1969,6 +1969,10 @@ static int server_main (server * const srv, int argc, char **argv) {
 
 		printf("%s\n", "Before if");
 
+		log_error_write(srv, __FILE__, __LINE__, "ss",
+                    "IF : ",
+				/*strerror(errno)*/"1");
+
 		if ((n = fdevent_poll(srv->ev, 1000)) > 0) {
 
 			printf("%s\n", "In if");
