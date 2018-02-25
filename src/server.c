@@ -3,29 +3,55 @@
 #ifdef MPTCP
 #include <linux/tcp.h>
 
-int get_tcp_info(int sockfd, int subflow, struct tcp_info *ti) {
-  if( (sockfd<0) || (ti==NULL))
-    return -1;
+void print_tcp_info(struct tcp_info *ti) {
+  if(ti==NULL)
+    return;
 
-  struct mptcp_sub_getsockopt sub_gso;
+  printf("tcpi_state: %d\n", ti->tcpi_state);
+  printf("tcpi_ca_state: %d\n", ti->tcpi_ca_state);
+  printf("tcpi_retransmits: %d\n",ti->tcpi_retransmits);
+  printf("tcpi_probes: %d\n",ti->tcpi_probes);
+  printf("tcpi_backoff: %d\n",ti->tcpi_backoff);
+  printf("tcpi_options: %d\n",ti->tcpi_options);
+  printf("tcpi_snd_wscale : %d\n",ti->tcpi_snd_wscale);
+  printf("tcpi_rcv_wscale : %d\n",ti->tcpi_rcv_wscale);
 
-  int optlen = sizeof(struct mptcp_sub_getsockopt);
-  int sub_optlen = sizeof(struct tcp_info);
-  sub_gso.id = subflow;
-  sub_gso.level = IPPROTO_TCP;
-  sub_gso.optname = TCP_INFO;
-  sub_gso.optlen = &sub_optlen;
-  sub_gso.optval = (char *) ti;
+  printf("tcpi_rto: %d\n",ti->tcpi_rto);
+  printf("tcpi_ato: %d\n",ti->tcpi_ato);
+  printf("tcpi_snd_mss : %d\n",ti->tcpi_snd_mss);
+  printf("tcpi_rcv_mss : %d\n",ti->tcpi_rcv_mss);
 
-  int error =  getsockopt(sockfd, IPPROTO_TCP, MPTCP_SUB_GETSOCKOPT,
-			  &sub_gso, &optlen);
-  if (error) {
-    DEBUG2("Ooops something went wrong with get info !%s","\n");
-    return -1;
-  }
-  return 0;
+  printf("tcpi_unacked : %d\n",ti->tcpi_unacked);
+  printf("tcpi_sacked : %d\n",ti->tcpi_sacked);
+  printf("tcpi_lost : %d\n", ti->tcpi_lost);
+  printf("tcpi_retrans : %d\n",ti->tcpi_retrans);
+  printf("tcpi_fackets : %d\n",ti->tcpi_fackets);
+
+  /* times */
+
+  printf("tcpi_last_data_sent : %d\n",ti->tcpi_last_data_sent);
+  //u_int32_ttcpi_last_ack_sent;/* Not remembered, sorry.  */
+  printf("tcpi_last_data_recv : %d\n",ti->tcpi_last_data_recv);
+  printf("tcpi_last_ack_recv : %d\n",ti->tcpi_last_ack_recv);
+
+  /* metrics */
+
+  printf("tcpi_pmtu : %d\n",ti->tcpi_pmtu);
+  printf("tcpi_rcv_ssthresh : %d\n",ti->tcpi_rcv_ssthresh);
+  printf("tcpi_rtt : %d\n",ti->tcpi_rtt);
+  printf("tcpi_rttvar : %d\n",ti->tcpi_rttvar);
+  printf("tcpi_snd_ssthresh : %d \n",ti->tcpi_snd_ssthresh);
+  printf("tcpi_snd_cwnd : %d\n",ti->tcpi_snd_cwnd);
+  printf("tcpi_advmss : %d \n",ti->tcpi_advmss);
+  printf("tcpi_reordering : %d\n",ti->tcpi_reordering);
+
+  printf("tcpi_rcv_rtt : %d\n",ti->tcpi_rcv_rtt);
+  printf("tcpi_rcv_space : %d\n",ti->tcpi_rcv_space);
+
+  printf("tcpi_total_retrans : %d\n",ti->tcpi_total_retrans);
 
 }
+
 #endif
 
 #include "first.h"
