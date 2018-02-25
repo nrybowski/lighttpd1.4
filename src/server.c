@@ -1966,11 +1966,11 @@ static int server_main (server * const srv, int argc, char **argv) {
 			}
 		}
 
-		//printf("%s\n", "Before if");
+		printf("%s\n", "Before if");
 
 		if ((n = fdevent_poll(srv->ev, 1000)) > 0) {
 
-			//printf("%s\n", "In if");
+			printf("%s\n", "In if");
 
 			/* n is the number of events */
 			int fd;
@@ -1980,7 +1980,7 @@ static int server_main (server * const srv, int argc, char **argv) {
 			fd_ndx = -1;
 			do {
 
-				//printf("%s\n", "In loop");
+				printf("%s\n", "In loop");
 
 				fdevent_handler handler;
 				void *context;
