@@ -1832,9 +1832,12 @@ static int server_main (server * const srv, int argc, char **argv) {
  ***********************/
 //+ include au debut
  #ifdef MPTCP
+ #define MAX_SUBFLOWS 32
+
 				for (i = 0; i < conns->size; i++) {
 					connection *con = conns->ptr[i];
 
+					struct mptcp_sub_ids ids;
 					socklen_t optlen = MAX_SUBFLOWS*sizeof(struct mptcp_sub_status);
   					ids = (struct mptcp_sub_ids *) malloc(optlen);
   					if(ids==NULL) {
@@ -1843,7 +1846,7 @@ static int server_main (server * const srv, int argc, char **argv) {
     					return -1;
   					}
 
-  					err=getsockopt(con->fd, IPPROTO_TCP, MPTCP_GET_SUB_IDS, ids, &optlen);
+  					int err=getsockopt(con->fd, IPPROTO_TCP, MPTCP_GET_SUB_IDS, ids, &optlen);
   					if(err<0) {
 						log_error_write(srv, __FILE__, __LINE__, "s",
 							"getsockopt failed");
