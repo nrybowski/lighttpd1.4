@@ -34,7 +34,7 @@
 #include <sys/wait.h>
 
 #include <string.h>
-#include <stdio>
+#include <stdio.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
