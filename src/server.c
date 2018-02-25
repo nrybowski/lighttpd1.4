@@ -112,7 +112,7 @@ int get_tcp_info(int sockfd, int subflow, struct tcp_info *ti) {
   int error =  getsockopt(sockfd, IPPROTO_TCP, MPTCP_SUB_GETSOCKOPT,
 			  &sub_gso, &optlen);
   if (error) {
-	  fprintf(stderr, "Rien ne va plus\n", );
+	  fprintf(stderr, "Rien ne va plus\n");
     return -1;
   }
   return 0;
