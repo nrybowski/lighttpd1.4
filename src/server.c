@@ -129,8 +129,8 @@ static void sigaction_handler(int sig, siginfo_t *si, void *context) {
 		last_sigterm_info = *si;
 
 		break;
-	case SIGALRM: 
-		handle_sig_alarm = 1; 
+	case SIGALRM:
+		handle_sig_alarm = 1;
 		break;
 	case SIGHUP:
 		handle_sig_hup = 1;
@@ -1282,7 +1282,7 @@ static int server_main (server * const srv, int argc, char **argv) {
 			}
 		}
 
-		/* 
+		/*
 		 * Change group before chroot, when we have access
 		 * to /etc/group
 		 * */
@@ -1536,7 +1536,7 @@ static int server_main (server * const srv, int argc, char **argv) {
 						   /* fall through */
 					  case  1: continue;
 					}
-					/** 
+					/**
 					 * check if one of our workers went away
 					 */
 					for (int n = 0; n < npids; ++n) {
@@ -1551,7 +1551,7 @@ static int server_main (server * const srv, int argc, char **argv) {
 					case EINTR:
 						srv->cur_ts = time(NULL);
 						/**
-						 * if we receive a SIGHUP we have to close our logs ourself as we don't 
+						 * if we receive a SIGHUP we have to close our logs ourself as we don't
 						 * have the mainloop who can help us here
 						 */
 						if (handle_sig_hup) {
@@ -1579,11 +1579,11 @@ static int server_main (server * const srv, int argc, char **argv) {
 		}
 
 		/**
-		 * for the parent this is the exit-point 
+		 * for the parent this is the exit-point
 		 */
 		if (!child) {
-			/** 
-			 * kill all children too 
+			/**
+			 * kill all children too
 			 */
 			if (graceful_shutdown || graceful_restart) {
 				/* flag to ignore one SIGINT if graceful_restart */
@@ -1715,13 +1715,13 @@ static int server_main (server * const srv, int argc, char **argv) {
 				return -1;
 			} else {
 #ifdef HAVE_SIGACTION
-				log_error_write(srv, __FILE__, __LINE__, "sdsd", 
+				log_error_write(srv, __FILE__, __LINE__, "sdsd",
 					"logfiles cycled UID =",
 					last_sighup_info.si_uid,
 					"PID =",
 					last_sighup_info.si_pid);
 #else
-				log_error_write(srv, __FILE__, __LINE__, "s", 
+				log_error_write(srv, __FILE__, __LINE__, "s",
 					"logfiles cycled");
 #endif
 			}
@@ -1966,7 +1966,12 @@ static int server_main (server * const srv, int argc, char **argv) {
 			}
 		}
 
+		printf("%s\n", "Before if");
+
 		if ((n = fdevent_poll(srv->ev, 1000)) > 0) {
+
+			printf("%s\n", "In if");
+
 			/* n is the number of events */
 			int fd;
 			int revents;
@@ -1974,6 +1979,9 @@ static int server_main (server * const srv, int argc, char **argv) {
 			last_active_ts = srv->cur_ts;
 			fd_ndx = -1;
 			do {
+
+				printf("%s\n", "In loop");
+
 				fdevent_handler handler;
 				void *context;
 
