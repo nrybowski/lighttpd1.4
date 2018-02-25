@@ -1587,6 +1587,10 @@ static int server_main (server * const srv, int argc, char **argv) {
 		unsigned int timer = 0;
 		for (int n = 0; n < npids; ++n) pids[n] = -1;
 		while (!child && !srv_shutdown && !graceful_shutdown) {
+
+
+			log_error_write(srv, __FILE__, __LINE__, "s", "Test test");
+
 			if (num_childs > 0) {
 				switch ((pid = fork())) {
 				case -1:
