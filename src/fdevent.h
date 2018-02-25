@@ -5,6 +5,10 @@
 #include "base_decls.h"
 #include "settings.h"   /* (handler_t) */
 
+#ifdef MPTCP
+#include <linux/tcp.h>
+#endif
+
 struct fdevents;        /* declaration */
 typedef struct fdevents fdevents;
 

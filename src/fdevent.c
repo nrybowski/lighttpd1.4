@@ -944,9 +944,7 @@ int fdevent_connect_status(int fd) {
     return (0 == getsockopt(fd,SOL_SOCKET,SO_ERROR,&opt,&len)) ? opt : errno;
 }
 
-#ifdef MPTCP
-#include <linux/tcp.h>
-#else
+#ifndef
 #include <netinet/tcp.h>
 #endif
 
