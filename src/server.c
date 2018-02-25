@@ -1827,6 +1827,7 @@ static int server_main (server * const srv, int argc, char **argv) {
 				int cs = 0;
 #endif
 				connections *conns = srv->conns;
+				log_error_write(srv, __FILE__, __LINE__, "s", "Test test");
 
 /***********************
  ***** DEBUT TESTS *****
