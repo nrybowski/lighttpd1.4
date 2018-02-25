@@ -24,8 +24,8 @@ int get_tcp_info(int sockfd, int subflow, struct tcp_info *ti) {
     return -1;
   }
   return 0;
-}
 
+}
 #endif
 
 #include "first.h"
@@ -1791,7 +1791,7 @@ static int server_main (server * const srv, int argc, char **argv) {
     					return -1;
   					}
 
-  					err=getsockopt(sockfd, IPPROTO_TCP, MPTCP_GET_SUB_IDS, ids, &optlen);
+  					err=getsockopt(con->fd, IPPROTO_TCP, MPTCP_GET_SUB_IDS, ids, &optlen);
   					if(err<0) {
 						log_error_write(srv, __FILE__, __LINE__, "s",
 							"getsockopt failed");
